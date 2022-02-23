@@ -6,6 +6,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlobContainerItem;
+import com.azure.storage.blob.models.BlobItem;
 import com.azure.storage.common.StorageSharedKeyCredential;
 import com.azure.identity.ClientSecretCredentialBuilder;
 
@@ -33,9 +34,9 @@ public class BlobClient {
 
         System.out.println(blobContainerClient.exists());
 
-//        for (BlobItem blobItem : blobContainerClient.listBlobs()) {
-//            System.out.println("\t" + blobItem.getName());
-//        }
+        for (BlobItem blobItem : blobContainerClient.listBlobs()) {
+            System.out.println("\t" + blobItem.getName());
+        }
     }
 
     private static BlobServiceClient KeysAuthenticate()  {
