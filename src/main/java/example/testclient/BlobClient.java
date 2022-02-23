@@ -1,14 +1,14 @@
 package example.testclient;
 
+import com.azure.identity.ClientSecretCredential;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlobContainerItem;
-import com.azure.storage.blob.models.BlobItem;
 import com.azure.storage.common.StorageSharedKeyCredential;
-//import com.azure.identity.DefaultAzureCredentialBuilder;
-//import com.azure.identity.ClientSecretCredentialBuilder;
+import com.azure.identity.ClientSecretCredentialBuilder;
+
 
 import java.util.Locale;
 
@@ -16,9 +16,9 @@ import java.util.Locale;
 public class BlobClient {
 
     public static void main ( String args[])  {
-//        KeysAuthenticate();
-//        SASAuthenticate();
-          ADAuthenticate();
+        KeysAuthenticate();
+        SASAuthenticate();
+        ADAuthenticate();
 
     }
 
@@ -31,11 +31,11 @@ public class BlobClient {
 
     private static void listObjects (BlobContainerClient blobContainerClient) {
 
-        System.out.println(blobContainerClient);
+        System.out.println(blobContainerClient.exists());
 
-        for (BlobItem blobItem : blobContainerClient.listBlobs()) {
-            System.out.println("\t" + blobItem.getName());
-        }
+//        for (BlobItem blobItem : blobContainerClient.listBlobs()) {
+//            System.out.println("\t" + blobItem.getName());
+//        }
     }
 
     private static BlobServiceClient KeysAuthenticate()  {
@@ -52,12 +52,16 @@ public class BlobClient {
 
 
     private static void ADAuthenticate(){
-        System.out.println("ADAuthenticate");
-//        TokenCredential ServicePrincipal = new ClientSecretCredentialBuilder()
-//                .tenantId("8f12c261-6dbf-47c3-918f-1d15198a3b3b")
-//                .clientId("254a124e-9cb5-49b2-919d-faf8c141ac0a")
-//                .clientSecret("secret")
-//                .build();
+        ClientSecretCredential credential = new ClientSecretCredentialBuilder()
+                .tenantId("8f12c261-6dbf-47c3-918f-1d15198a3b3b")
+                .clientId("254a124e-9cb5-49b2-919d-faf8c141ac0a")
+                .clientSecret("secret")
+                .build();
+        String accountName = "mediumblog";
+
+        String endpoint = String.format(Locale.ROOT, "https://%s.blob.core.windows.net", accountName);
+        BlobServiceClient storageClient = new BlobServiceClientBuilder().endpoint(endpoint).credential(credential).buildClient();
+        listContainers(storageClient);
 
     }
 
@@ -73,7 +77,7 @@ public class BlobClient {
                                               .containerName(blobName)
                                               .buildClient();
 
-
+        listObjects(blobContainerClient);
         return blobContainerClient;
 
     }
