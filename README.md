@@ -1,2 +1,2 @@
-# java-blob-client-
+# java-blob-client
 Authentication to Azure Blob Mechanisms
